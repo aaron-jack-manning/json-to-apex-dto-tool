@@ -2,7 +2,7 @@
 
 This tool converts JSON to a data transfer object for Salesforce Apex. An example is shown below:
 
-`
+```
 [
     {
         "Name": "Green",
@@ -17,9 +17,9 @@ This tool converts JSON to a data transfer object for Salesforce Apex. An exampl
         "HexValue": "#0000ff"
     }
 ]
-`
+```
 
-`
+```
 public class ColourDTO
 {
     public static ColourDTO FromJSON(string jsonString)
@@ -30,7 +30,7 @@ public class ColourDTO
     public string HexValue;
     public string Name;
 }
-`
+```
 
 The provided output will translate all objects within the main object to internal classes at the top level of the main data transfer object. A `FromJSON` static method is created to parse JSON into an instance of the corresponding class. The top level of JSON must be a list of objects or a single object.
 
