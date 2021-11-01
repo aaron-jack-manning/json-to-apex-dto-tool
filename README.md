@@ -36,6 +36,8 @@ The provided output will translate all objects within the main object to interna
 
 If the provided JSON includes an array of JSON objects, the class will be marked as unnamed and the user will need to fill in the name of that class.
 
+The name of the top level class is provided as input to the `jsonToApexDto` function, which is the only function that should be called when trying to achieve the above output (as opposed to modifying the implementation or extracting specific functions for other uses).
+
 More examples are provided in the `examples` file, corresponding to the examples in the `Program.fs` file.
 
 The source code for the JSON parser can be found at `JSONParser` while the code to construct the Apex DTO is available in `ApexDTO`.
