@@ -1,4 +1,4 @@
-﻿module ApexDTO
+module ApexDTO
 
 open JSONParser
 
@@ -151,12 +151,13 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
         ("", objectList)
         ||> List.fold (fun state element -> state + element + "\n")
     
-    if String.length otherClasses = 0 then
-        topLevelClass.Insert(insertionIndex, Regex.Replace(otherClasses, "\n", "\n    "))
-    else
-        topLevelClass.Insert(insertionIndex, "\n    " + Regex.Replace(otherClasses, "\n", "\n    "))
+    let allClassesInTopLevel =
+        if String.length otherClasses = 0 then
+            topLevelClass.Insert(insertionIndex, Regex.Replace(otherClasses, "\n", "\n    "))
+        else
+            topLevelClass.Insert(insertionIndex, "\n" + indent 1 + Regex.Replace(otherClasses, "\n", "\n    "))
 
-
+    allClassesInTopLevel.Insert(insertionIndex, "\n" + indent 1 + $"public static " + className + "DTO FromJSON(string jsonString)\n" + indent 1 + "{\n" + indent 2 + "return (" + className + "DTO)JSON.Deserialize(jsonString, " + className + "DTO.Class);\n" + indent 1 + "}\n")
 
 let jsonToApexDto (className : string) (jsonString : string) =
     let parsedJson = parseJsonString jsonString
