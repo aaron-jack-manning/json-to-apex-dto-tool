@@ -1,5 +1,10 @@
 public class PersonDTO
 {
+    public static PersonDTO FromJSON(string jsonString)
+    {
+        return (PersonDTO)JSON.Deserialize(jsonString, PersonDTO.Class);
+    }
+
     class AddressDTO
     {
         public string City;
