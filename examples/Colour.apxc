@@ -1,0 +1,5 @@
+public class ColourDTO
+{
+    public string HexValue;
+    public string Name;
+}

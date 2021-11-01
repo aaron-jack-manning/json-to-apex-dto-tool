@@ -1,0 +1,14 @@
+[
+    {
+        "Name": "Green",
+        "HexValue": "#66ff66"
+    },
+    {
+        "Name": "Red",
+        "HexValue": "#ff0066"
+    },
+    {
+        "Name": "Blue",
+        "HexValue": "#0000ff"
+    }
+]
