@@ -82,6 +82,7 @@ let insertionIndexCalculator (topLevelClass : string) : int =
 let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
     let mutable objectList = List.empty
     let mutable unnamedClassCount = -1
+    let mutable currentArrayKey = ""
 
     let rec dtoBuilder = function
         | Object jsonObject ->
@@ -89,6 +90,12 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
         
             for keyValuePair in Map.toList jsonObject do
                 let key, value = keyValuePair
+
+                // this is to set the array key to identify the name for the anonymous objects in an array
+                match value with
+                | Array jsonArray ->
+                    currentArrayKey <- key + "Single"
+                | _ -> ()
 
                 let apexValue = dtoBuilder value
 
@@ -143,9 +150,9 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
 
                 unnamedClassCount <- unnamedClassCount + 1
 
-                objectList <- List.append objectList ["class [UNNAMEDCLASS" + string unnamedClassCount + "]DTO\n{\n" + apexValue + "}"]
+                objectList <- List.append objectList ["class " + string currentArrayKey + "]DTO\n{\n" + apexValue + "}"]
 
-                indent 1 + $"public List<[UNNAMEDCLASS{unnamedClassCount}]DTO> "
+                indent 1 + $"public List<{currentArrayKey}DTO> "
             | _ ->
                 failwith "this error should never occur"
         | _ ->
