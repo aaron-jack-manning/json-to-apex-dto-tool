@@ -67,7 +67,7 @@ More examples are provided in the `examples` file, corresponding to the examples
 The source code for the JSON parser can be found at `JSONParser` while the code to construct the Apex DTO is available in `ApexDTO`.
 
 
-## Known Problems
+## Known Problems (and Planned Fixes)
 
 The following are current problems with the existing implementation.
 
