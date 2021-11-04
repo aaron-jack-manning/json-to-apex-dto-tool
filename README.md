@@ -41,3 +41,31 @@ The name of the top level class is provided as input to the `jsonToApexDto` func
 More examples are provided in the `examples` file, corresponding to the examples in the `Program.fs` file.
 
 The source code for the JSON parser can be found at `JSONParser` while the code to construct the Apex DTO is available in `ApexDTO`.
+
+
+## Known Problems
+
+The following are current problems with the existing implementation.
+
+- If nested classes have the same name then two classes of the same name will be created. For example:
+
+```
+{
+    "data":
+    {
+        "property1":"value",
+        "data":
+        {
+            "property2":"value"
+        }
+    }
+}
+```
+
+will created two classes named `DataDTO`.
+
+- If a property is named according to a language keyword, such as public or private, the resulting DTO will not be valid Apex due to the variable being given that same name. This makes strict deserialization hard in general, and should be avoided from the start, but there is currently no explicit handling for this case. Shout out to the Raisely API for this annoying one :P
+
+## Other Planned Changes
+
+- Number unnamed DTOs to distinguish between them when many arrays of anonymous objects exists.
