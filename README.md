@@ -34,7 +34,31 @@ public class ColourDTO
 
 The provided output will translate all objects within the main object to internal classes at the top level of the main data transfer object. A `FromJSON` static method is created to parse JSON into an instance of the corresponding class. The top level of JSON must be a list of objects or a single object.
 
-If the provided JSON includes an array of JSON objects, the class will be marked as unnamed and the user will need to fill in the name of that class.
+If the provided JSON includes an array of JSON objects, the class name will be the property name followed by the word ***Singular***. For example:
+
+```
+"ContactNumbers":
+[
+    { "Type": "Home", "PhoneNumber": 7312627627 },
+    { "Type": "Mobile", "PhoneNumber": 3445725540 }
+]
+```
+
+will be converted into the class:
+
+```
+class ContactNumbersSingleDTO
+{
+    public long PhoneNumber;
+    public string Type;
+}
+```
+
+with the instance in the higher level class of:
+
+```
+public List<ContactNumbersSingleDTO> ContactNumbers
+```
 
 The name of the top level class is provided as input to the `jsonToApexDto` function, which is the only function that should be called when trying to achieve the above output (as opposed to modifying the implementation or extracting specific functions for other uses).
 
@@ -65,7 +89,3 @@ The following are current problems with the existing implementation.
 will created two classes named `DataDTO`.
 
 - If a property is named according to a language keyword, such as public or private, the resulting DTO will not be valid Apex due to the variable being given that same name. This makes strict deserialization hard in general, and should be avoided from the start, but there is currently no explicit handling for this case. Shout out to the Raisely API for this annoying one :P. My current plan for this is to give the properties that have the same name as any language keyword a new name (with property appended to the end or something) and to do a find and replace within the static method that deserializes. This would look something like this `jsonString.ReplaceAll('"public"(\\s?|\\s+):', '"publicProperty":')`.
-
-## Other Planned Changes
-
-- Number unnamed DTOs to distinguish between them when many arrays of anonymous objects exists.
