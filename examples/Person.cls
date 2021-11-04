@@ -1,11 +1,11 @@
-public class PersonDTO
+public class DonationDTO
 {
-    public static PersonDTO FromJSON(string jsonString)
+    public static DonationDTO FromJSON(string jsonString)
     {
-        return (PersonDTO)JSON.Deserialize(jsonString, PersonDTO.Class);
+        return (DonationDTO)JSON.Deserialize(jsonString, DonationDTO.Class);
     }
 
-    class AddressDTO
+    public class AddressDTO
     {
         public string City;
         public long HouseNumber;
@@ -13,7 +13,7 @@ public class PersonDTO
         public string State;
         public string Street;
     }
-    class [UNNAMEDCLASS0]DTO
+    class ContactNumbersSingle]DTO
     {
         public long PhoneNumber;
         public string Type;
@@ -21,7 +21,7 @@ public class PersonDTO
 
     public AddressDTO Address;
     public long Age;
-    public List<[UNNAMEDCLASS0]DTO> ContactNumbers;
+    public List<ContactNumbersSingleDTO> ContactNumbers;
     public string FirstName;
     public string Gender;
     public string LastName;
