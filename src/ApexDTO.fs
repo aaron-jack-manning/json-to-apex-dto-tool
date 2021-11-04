@@ -150,7 +150,7 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
 
                 unnamedClassCount <- unnamedClassCount + 1
 
-                objectList <- List.append objectList ["class " + string currentArrayKey + "]DTO\n{\n" + apexValue + "}"]
+                objectList <- List.append objectList ["class " + string currentArrayKey + "DTO\n{\n" + apexValue + "}"]
 
                 indent 1 + $"public List<{currentArrayKey}DTO> "
             | _ ->
