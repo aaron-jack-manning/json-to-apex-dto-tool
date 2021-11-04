@@ -66,8 +66,22 @@ let inline indent counter =
 
     spaceArray |> System.String |> string
 
+let generateParseJsonMethod (className : string) : string =
+    
+    [
+        indent 1 + $"public static " + className + "DTO FromJSON(string jsonString)\n";
+        indent 1 + "{\n";
+        indent 2 + "return (" + className + "DTO)JSON.Deserialize(jsonString, " + className + "DTO.Class);\n";
+        indent 1 + "}\n"
+    ] |> List.fold (fun state element -> state + element) ("")
+
+let insertionIndexCalculator (topLevelClass : string) : int =
+    topLevelClass.IndexOf("{") + 1
+
+
 let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
     let mutable objectList = List.empty
+    let mutable unnamedClassCount = -1
 
     let rec dtoBuilder = function
         | Object jsonObject ->
@@ -82,7 +96,7 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
                 | Object internalObjectJson ->
                     //objectString <- objectString + indent (indentation) + "class " + key + "DTO\n" + indent indentation + "{\n" + apexValue + indent indentation + "}\n"
                     
-                    objectList <- List.append objectList ["class " + key + "DTO\n" + "{\n" + apexValue + "}"]
+                    objectList <- List.append objectList ["public class " + key + "DTO\n" + "{\n" + apexValue + "}"]
 
                     objectString <- objectString + indent 1 + $"public {key}DTO {key};\n"
                 | Array jsonArray ->
@@ -127,9 +141,11 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
             | Object jsonObject ->
                 let apexValue = dtoBuilder (JSONValue.Object jsonObject)
 
-                objectList <- List.append objectList ["class [UNNAMEDCLASS]DTO\n{\n" + apexValue + "}"]
+                unnamedClassCount <- unnamedClassCount + 1
 
-                indent 1 + "public List<[UNNAMEDCLASS]DTO> "
+                objectList <- List.append objectList ["class [UNNAMEDCLASS" + string unnamedClassCount + "]DTO\n{\n" + apexValue + "}"]
+
+                indent 1 + $"public List<[UNNAMEDCLASS{unnamedClassCount}]DTO> "
             | _ ->
                 failwith "this error should never occur"
         | _ ->
@@ -145,7 +161,7 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
         | _ ->
             failwith "top level of json must be an array or object"
 
-    let insertionIndex = topLevelClass.IndexOf("{") + 1
+    let insertionIndex = insertionIndexCalculator topLevelClass
     
     let otherClasses =
         ("", objectList)
@@ -157,7 +173,7 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
         else
             topLevelClass.Insert(insertionIndex, "\n" + indent 1 + Regex.Replace(otherClasses, "\n", "\n    "))
 
-    allClassesInTopLevel.Insert(insertionIndex, "\n" + indent 1 + $"public static " + className + "DTO FromJSON(string jsonString)\n" + indent 1 + "{\n" + indent 2 + "return (" + className + "DTO)JSON.Deserialize(jsonString, " + className + "DTO.Class);\n" + indent 1 + "}\n")
+    allClassesInTopLevel.Insert(insertionIndex, "\n" + generateParseJsonMethod className)
 
 let jsonToApexDto (className : string) (jsonString : string) =
     let parsedJson = parseJsonString jsonString
