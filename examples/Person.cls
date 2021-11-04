@@ -13,7 +13,7 @@ public class PersonDTO
         public string State;
         public string Street;
     }
-    class [UNNAMEDCLASS]DTO
+    class [UNNAMEDCLASS0]DTO
     {
         public long PhoneNumber;
         public string Type;
@@ -21,7 +21,7 @@ public class PersonDTO
 
     public AddressDTO Address;
     public long Age;
-    public List<[UNNAMEDCLASS]DTO> ContactNumbers;
+    public List<[UNNAMEDCLASS0]DTO> ContactNumbers;
     public string FirstName;
     public string Gender;
     public string LastName;
