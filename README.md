@@ -64,7 +64,7 @@ The following are current problems with the existing implementation.
 
 will created two classes named `DataDTO`.
 
-- If a property is named according to a language keyword, such as public or private, the resulting DTO will not be valid Apex due to the variable being given that same name. This makes strict deserialization hard in general, and should be avoided from the start, but there is currently no explicit handling for this case. Shout out to the Raisely API for this annoying one :P
+- If a property is named according to a language keyword, such as public or private, the resulting DTO will not be valid Apex due to the variable being given that same name. This makes strict deserialization hard in general, and should be avoided from the start, but there is currently no explicit handling for this case. Shout out to the Raisely API for this annoying one :P. My current plan for this is to give the properties that have the same name as any language keyword a new name (with property appended to the end or something) and to do a find and replace within the static method that deserializes.
 
 ## Other Planned Changes
 
