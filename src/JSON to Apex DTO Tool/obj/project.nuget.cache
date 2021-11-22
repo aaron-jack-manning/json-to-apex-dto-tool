@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "pUfmh5modDske5FLdbwjJwVpHuV3yHhKA3mbDv95wGc1axz2BUuzVMizgjAbKZ2UoKzcwboSK7u98tdee3hzeA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\aaron\\My Drive\\Side Projects\\Project Files\\Programming Projects\\JSON to Apex DTO Tool (F#)\\JSON to Apex DTO Tool\\JSON to Apex DTO Tool\\JSON to Apex DTO Tool.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\aaron\\.nuget\\packages\\fparsec\\1.1.1\\fparsec.1.1.1.nupkg.sha512",
+    "C:\\Users\\aaron\\.nuget\\packages\\fsharp.core\\5.0.0\\fsharp.core.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
