@@ -1,6 +1,10 @@
 # JSON to Apex DTO Tool
 
-This tool converts JSON to a data transfer object for Salesforce Apex. An example is shown below:
+This tool converts JSON to a data transfer object for Salesforce Apex.
+
+## Example
+
+For example, the following JSON is converted to the following class.
 
 ```
 [
@@ -32,9 +36,17 @@ public class ColourDTO
 }
 ```
 
+More examples are provided in the `examples` file.
+
+## Usage
+
+The easiest way to use this library is to download the repo and open `Program.fs`. Then change the `jsonString` to be the JSON that you wish to convert, `folder` to the location you want the `.cls` file to be placed in and the `className` to be the name of the top level class.
+
+## Implementation Details
+
 The provided output will translate all objects within the main object to internal classes at the top level of the main data transfer object. A `FromJSON` static method is created to parse JSON into an instance of the corresponding class. The top level of JSON must be a list of objects or a single object.
 
-If the provided JSON includes an array of JSON objects, the class name will be the property name followed by the word ***Singular***. For example:
+If the provided JSON includes an array of JSON objects, the class name will be the property name followed by the word ***Single***. For example:
 
 ```
 "ContactNumbers":
@@ -60,16 +72,11 @@ with the instance in the higher level class of:
 public List<ContactNumbersSingleDTO> ContactNumbers
 ```
 
-The name of the top level class is provided as input to the `jsonToApexDto` function, which is the only function that should be called when trying to achieve the above output (as opposed to modifying the implementation or extracting specific functions for other uses).
-
-More examples are provided in the `examples` file, corresponding to the examples in the `Program.fs` file.
-
-The source code for the JSON parser can be found at `JSONParser` while the code to construct the Apex DTO is available in `ApexDTO`.
-
+In general, it is best to avoid `null` values in the JSON schema as the type cannot be inferred. This is handled by assuming all `null` values to be an empty object so that fields can be manually added later. If you wish for this behaviour to change, please see the `swapNulls` function in `JSONProcessor.fs`. The `jsonValidator` function which is called later has a case to catch any nulls that aren't handled in `swapNulls`.
 
 ## Known Problems
 
-The following are current problems with the existing implementation.
+The following are known problems with the existing implementation that I have come across in my usage. I do plan on fixing these at some point, but they are documented here in the meantime for convenience, and as specifications for when I go to fix them.
 
 - If nested classes have the same name then two classes of the same name will be created. For example:
 
@@ -88,4 +95,8 @@ The following are current problems with the existing implementation.
 
 will created two classes named `DataDTO`.
 
-- If a property is named according to a language keyword, such as public or private, the resulting DTO will not be valid Apex due to the variable being given that same name. This makes strict deserialization hard in general, and should be avoided from the start, but there is currently no explicit handling for this case. Shout out to the Raisely API for this annoying one :P. My current plan for this is to give the properties that have the same name as any language keyword a new name (with property appended to the end or something) and to do a find and replace within the static method that deserializes. This would look something like this `jsonString.ReplaceAll('"public"(\\s?|\\s+):', '"publicProperty":')`.
+- If a property is named according to a language keyword, such as `public` or `private`, the resulting DTO will not be valid Apex due to the variable being given that same name. Shout out to the Raisely API for this annoying one :P. My current plan for this is to give the properties that have the same name as any language keyword a new name (with `Property` appended to the end or something) and to do a find and replace within the static method that deserializes. This would look something like this `jsonString.ReplaceAll('"public"(\\s?|\\s+):', '"publicProperty":')`. This currently what I do manually but will implement a fix in the generator at some point.
+
+## Links
+
+The JSON parser used within this project was implemented using [FParsec](https://github.com/stephan-tolksdorf/fparsec).

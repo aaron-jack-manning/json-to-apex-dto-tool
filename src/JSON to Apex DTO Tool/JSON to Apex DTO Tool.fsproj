@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Compile Include="JSONParser.fs" />
+    <Compile Include="JSONProcessing.fs" />
     <Compile Include="ApexDTO.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

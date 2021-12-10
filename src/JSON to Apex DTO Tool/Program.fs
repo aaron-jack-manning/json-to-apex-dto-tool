@@ -1,30 +1,33 @@
 ﻿open ApexDTO
 
+open System.IO
+
 [<EntryPoint>]
 let main argv =
 
     let jsonString =
         """
-        {
-            "FirstName": "John",
-            "LastName": "Smith",
-            "Gender": "male",
-            "Age": 24,
-            "Address":
+        [
             {
-                "HouseNumber": 12,
-                "Street": "Generic Street",
-                "City": "Austin",
-                "State": "Texas",
-                "PostalCode": "78701"
+                "Name": "Green",
+                "HexValue": "#66ff66"
             },
-            "ContactNumbers":
-            [
-                { "Type": "Home", "PhoneNumber": 7312627627 },
-                { "Type": "Mobile", "PhoneNumber": 3445725540 }
-            ]
-        }
+            {
+                "Name": "Red",
+                "HexValue": "#ff0066"
+            },
+            {
+                "Name": "Blue",
+                "HexValue": "#0000ff"
+            }
+        ]
         """
-    printfn "%A" (jsonToApexDto "Donation" jsonString)
+
+    let className = "Colour"
+    let folder = @"C:\Users\username\Downloads\"
+    let apexClass = jsonToApexDto className jsonString
+
+
+    File.WriteAllText(folder + className + ".cls", apexClass)
 
     0

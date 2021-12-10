@@ -1,63 +1,11 @@
 ﻿module ApexDTO
 
 open JSONParser
+open JSONProcessing
 
 open System
 open System.Text.RegularExpressions
-open Microsoft.FSharp.Reflection
 
-let rec jsonValidation = function
-    | Object jsonObject ->
-        [
-            for keyValuePair in Map.toList jsonObject do
-                let key, value = keyValuePair
-
-                yield jsonValidation value
-        ]
-        |> List.forall (fun x -> x)
-    | Array jsonArray ->
-        let unionCaseName (discriminatedUnion : 'a) =
-            match FSharpValue.GetUnionFields(discriminatedUnion, typeof<'a>) with
-            | case, _ -> case.Name
-        let baseCaseName
-            = unionCaseName jsonArray.[0]
-        let allSameType =
-            (true, jsonArray)
-            ||> List.fold (fun state element -> state && (unionCaseName element = baseCaseName))
-
-        match jsonArray.[0] with
-        | Number jsonNumber ->
-            let allLong =
-                jsonArray
-                |> List.forall
-                    (
-                        fun x ->
-                            match x with
-                            | Number jsonNumber2 ->
-                                truncate jsonNumber2 = jsonNumber2
-                            | _ ->
-                                failwith "this error should never occur"
-                    )
-            let allDouble =
-                jsonArray
-                |> List.forall
-                    (
-                        fun x ->
-                            match x with
-                            | Number jsonNumber2 ->
-                                truncate jsonNumber2 <> jsonNumber2
-                            | _ ->
-                                failwith "this error should never occur"
-                    )
-            allLong || allDouble
-        | Array jsonArray ->
-            failwith "json does not permit arrays within arrays"
-        | _ ->
-            allSameType
-    | Null ->
-        failwith "try again without null values, as type cannot be inferred"
-    | _ ->
-        true
 
 let inline indent counter =
     let space = ' '
@@ -101,8 +49,7 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
 
                 match value with
                 | Object internalObjectJson ->
-                    //objectString <- objectString + indent (indentation) + "class " + key + "DTO\n" + indent indentation + "{\n" + apexValue + indent indentation + "}\n"
-                    
+
                     objectList <- List.append objectList ["public class " + key + "DTO\n" + "{\n" + apexValue + "}"]
 
                     objectString <- objectString + indent 1 + $"public {key}DTO {key};\n"
@@ -182,10 +129,13 @@ let apexDtoGenerator (className : string) (jsonValue : JSONValue) =
 
     allClassesInTopLevel.Insert(insertionIndex, "\n" + generateParseJsonMethod className)
 
+
 let jsonToApexDto (className : string) (jsonString : string) =
     let parsedJson = parseJsonString jsonString
 
-    jsonValidation parsedJson |> ignore
+    let fixedJson = swapNulls parsedJson
+
+    jsonValidation fixedJson |> ignore
     
-    apexDtoGenerator className parsedJson
+    apexDtoGenerator className fixedJson
     
