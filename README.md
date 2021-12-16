@@ -36,7 +36,7 @@ public class ColourDTO
 }
 ```
 
-More examples are provided in the `examples` file.
+More examples are provided in the `samples` file.
 
 ## Usage
 
