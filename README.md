@@ -36,7 +36,7 @@ public class ColourDTO
 }
 ```
 
-More examples are provided in the `usage` file.
+More examples are provided in the `samples` file.
 
 ## Usage
 
@@ -96,6 +96,10 @@ The following are known problems with the existing implementation that I have co
 will created two classes named `DataDTO`.
 
 - If a property is named according to a language keyword, such as `public` or `private`, the resulting DTO will not be valid Apex due to the variable being given that same name. Shout out to the Raisely API for this annoying one :P. My current plan for this is to give the properties that have the same name as any language keyword a new name (with `Property` appended to the end or something) and to do a find and replace within the static method that deserializes. This would look something like this `jsonString.ReplaceAll('"public"(\\s?|\\s+):', '"publicProperty":')`. This currently what I do manually but will implement a fix in the generator at some point.
+
+- A not very helpful exception is thrown when an empty list is provided, as type cannot be inferred. I intend to gracefully handle this case at some point.
+
+- New lines are not always permitted between elements in a list, even though they should be.
 
 ## Links
 
