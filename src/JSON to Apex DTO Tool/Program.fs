@@ -25,9 +25,10 @@ let main argv =
 
     let className = "Colour"
     let folder = @"C:\Users\username\Downloads\"
-    let apexClass = jsonToApexDto className jsonString
+    let apexClassResult = jsonToApexDto className jsonString
 
-
-    File.WriteAllText(folder + className + ".cls", apexClass)
-
+    match apexClassResult with
+    | Ok apexClass -> File.WriteAllText(folder + className + ".cls", apexClass)
+    | Error message -> printfn "%s" message
+    
     0

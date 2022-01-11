@@ -135,7 +135,7 @@ let jsonToApexDto (className : string) (jsonString : string) =
 
     let fixedJson = swapNulls parsedJson
 
-    jsonValidation fixedJson |> ignore
-    
-    apexDtoGenerator className fixedJson
+    match jsonValidation fixedJson with
+        | Valid -> Ok (apexDtoGenerator className fixedJson)
+        | Invalid message -> Error message
     

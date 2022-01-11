@@ -99,8 +99,6 @@ will created two classes named `DataDTO`.
 
 - A not very helpful exception is thrown when an empty list is provided, as type cannot be inferred. I intend to gracefully handle this case at some point.
 
-- New lines are not always permitted between elements in a list, even though they should be.
-
 ## Links
 
 The JSON parser used within this project was implemented using [FParsec](https://github.com/stephan-tolksdorf/fparsec).

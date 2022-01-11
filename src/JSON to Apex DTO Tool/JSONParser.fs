@@ -84,7 +84,6 @@ let numberParser : Parser<_, unit> =
 let primitiveParser : Parser<_, unit> =
     nullParser <|> boolParser <|> stringValueParser <|> numberParser
 
-
 // Common array and object parsers
 let commaParser = pchar ',' .>> spaces
 
@@ -115,14 +114,13 @@ let openBracketParser = pchar '[' .>> spaces
 let closeBracketParser = pchar ']' .>> spaces
 
 let arrayArgumentListParser =
-    sepBy (objectParser <|>  primitiveParser) commaParser
+    (sepBy (objectParser <|>  primitiveParser) commaParser) .>> spaces
     |>> Array
 
 arrayParserImpl := spaces >>. (openBracketParser >>. arrayArgumentListParser .>> closeBracketParser) .>> spaces
 
 let jsonParser =
     spaces >>. (arrayParser <|> objectParser)
-
 
 let parseJsonString inputJson =
     let parsedResult = run jsonParser inputJson
